@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Upload and Split</title>
+    <style>
+        .drop-area {
+            border: 2px dashed #ccc;
+            border-radius: 20px;
+            width: 300px;
+            margin: 50px auto;
+            padding: 20px;
+            text-align: center;
+        }
+        .button {
+            display: block;
+            width: 100px;
+            margin: 20px auto;
+            padding: 10px;
+            text-align: center;
+            background: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="drop-area" id="drop-area">
+        <p>Drag your file heres</p>
+    </div>
+    <div class="button" id="upload-button">UPLOAD</div>
+
+    <script>
+        let droppedFiles = null;
+
+        const dropArea = document.getElementById('drop-area');
+        dropArea.addEventListener('drop', handleDrop, false);
+        dropArea.addEventListener('dragover', (event) => {
+            event.stopPropagation();
+            event.preventDefault();
+            event.dataTransfer.dropEffect = 'copy';
+        }, false);
+
+        function handleDrop(event) {
+    event.stopPropagation();
+    event.preventDefault();
+    droppedFiles = event.dataTransfer.files;
+    // Change drop area text to the name of the file
+    if (droppedFiles.length > 0) {
+        document.getElementById('drop-area').innerText = `File ready to upload: ${droppedFiles[0].name}`;
+    }
+}
+
+       const uploadButton = document.getElementById('upload-button');
+       uploadButton.addEventListener('click', handleUpload, false);
+
+       function handleUpload() {
+    if (!droppedFiles) {
+        alert("Please drop a file first");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', droppedFiles[0]);
+
+    fetch('/upload', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (response.ok) {
+            window.location.href = '/preview'; // Redirect to the preview page
+        } else {
+            throw new Error('Server responded with an error!');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while uploading the file.');
+    });
+}
+    </script>
+</body>
+</html>

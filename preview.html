@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Page Previews</title>
+    <style>
+        .thumbnail {
+            margin: 10px;
+            border: 1px solid #ccc;
+            display: inline-block;
+            padding: 5px;
+        }
+        .thumbnail img {
+            max-width: 100px;
+            height: auto;
+        }
+        .back-button {
+            margin: 20px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    {% for page in pages %}
+    <div class="thumbnail">
+        <!-- Display an image tag or an object tag for PDF preview -->
+        <object data="data:application/pdf;base64,{{ page }}" type="application/pdf" width="100" height="100">
+            <a href="/download/{{ loop.index0 }}">Download Page {{ loop.index }}</a>
+        </object>
+        <!-- Download link for the PDF page -->
+        <p><a href="/download/{{ loop.index0 }}">Download Page {{ loop.index }}</a></p>
+    </div>
+    {% endfor %}
+    <!-- Button to return to the upload page -->
+    <button onclick="window.location.href='/'">Upload Another File</button>
+</body>
+</html>
