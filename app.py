@@ -72,4 +72,4 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in {'pdf'}
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
